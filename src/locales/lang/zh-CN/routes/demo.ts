@@ -187,4 +187,4 @@ export default {
     editRowTable: '可编辑行',
     authColumn: '权限列',
   },
-};
+}

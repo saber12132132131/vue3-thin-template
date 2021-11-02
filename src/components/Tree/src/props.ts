@@ -1,4 +1,4 @@
-import type { PropType } from 'vue';
+import type { PropType } from 'vue'
 import type {
   ReplaceFields,
   ActionItem,
@@ -6,10 +6,10 @@ import type {
   CheckKeys,
   ContextMenuOptions,
   TreeItem,
-} from './typing';
-import type { ContextMenuItem } from '/@/hooks/web/useContextMenu';
-import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree';
-import { propTypes } from '/@/utils/propTypes';
+} from './typing'
+import type { ContextMenuItem } from '/@/hooks/web/useContextMenu'
+import type { TreeDataItem } from 'ant-design-vue/es/tree/Tree'
+import { propTypes } from '/@/utils/propTypes'
 
 export const basicProps = {
   value: {
@@ -91,7 +91,7 @@ export const basicProps = {
   checkOnSearch: propTypes.bool.def(false),
   // 搜索完成自动select所有结果
   selectedOnSearch: propTypes.bool.def(false),
-};
+}
 
 export const treeNodeProps = {
   actionList: {
@@ -105,4 +105,4 @@ export const treeNodeProps = {
     type: Array as PropType<TreeDataItem[]>,
     default: () => [],
   },
-};
+}
