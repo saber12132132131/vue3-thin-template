@@ -1,5 +1,13 @@
+/*
+ * @Author: your name
+ * @Date: 2021-11-01 13:37:49
+ * @LastEditTime: 2021-11-05 11:33:12
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \vue3-thin-template\.eslintrc.js
+ */
 // @ts-check
-const { defineConfig } = require('eslint-define-config');
+const { defineConfig } = require('eslint-define-config')
 module.exports = defineConfig({
   root: true,
   env: {
@@ -38,22 +46,10 @@ module.exports = defineConfig({
     '@typescript-eslint/ban-types': 'off',
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
-    '@typescript-eslint/no-unused-vars': [
-      'error',
-      {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-      },
-    ],
-    'no-unused-vars': [
-      'error',
-      {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-      },
-    ],
+    '@typescript-eslint/no-unused-vars': 'off',
+    'no-unused-vars': 'off',
     'space-before-function-paren': 'off',
-
+    'vue/component-definition-name-casing': 'off',
     'vue/attributes-order': 'off',
     'vue/one-component-per-file': 'off',
     'vue/html-closing-bracket-newline': 'off',
@@ -62,6 +58,9 @@ module.exports = defineConfig({
     'vue/singleline-html-element-content-newline': 'off',
     'vue/attribute-hyphenation': 'off',
     'vue/require-default-prop': 'off',
+    'vue/no-unused-components': 'off',
+    'generator-star-spacing': 'off',
+    'space-before-blocks': 'off',
     'vue/html-self-closing': [
       'error',
       {
@@ -75,4 +74,4 @@ module.exports = defineConfig({
       },
     ],
   },
-});
+})

@@ -1,17 +1,25 @@
-import { MockMethod } from 'vite-plugin-mock';
-import { Random } from 'mockjs';
-import { resultPageSuccess } from '../_util';
+/*
+ * @Author: your name
+ * @Date: 2021-11-01 13:37:49
+ * @LastEditTime: 2021-11-03 11:39:49
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: \vue3-thin-template\mock\demo\table-demo.ts
+ */
+import { MockMethod } from 'vite-plugin-mock'
+import { Random } from 'mockjs'
+import { resultPageSuccess } from '../_util'
 
 function getRandomPics(count = 10): string[] {
-  const arr: string[] = [];
+  const arr: string[] = []
   for (let i = 0; i < count; i++) {
-    arr.push(Random.image('800x600', Random.color(), Random.color(), Random.title()));
+    arr.push(Random.image('800x600', Random.color(), Random.color(), Random.title()))
   }
-  return arr;
+  return arr
 }
 
 const demoList = (() => {
-  const result: any[] = [];
+  const result: any[] = []
   for (let index = 0; index < 200; index++) {
     result.push({
       id: `${index}`,
@@ -34,10 +42,10 @@ const demoList = (() => {
       time: `@time('HH:mm')`,
       'no|100000-10000000': 100000,
       'status|1': ['normal', 'enable', 'disable'],
-    });
+    })
   }
-  return result;
-})();
+  return result
+})()
 
 export default [
   {
@@ -45,8 +53,8 @@ export default [
     timeout: 100,
     method: 'get',
     response: ({ query }) => {
-      const { page = 1, pageSize = 20 } = query;
-      return resultPageSuccess(page, pageSize, demoList);
+      const { page = 1, pageSize = 20 } = query
+      return resultPageSuccess(page, pageSize, demoList)
     },
   },
-] as MockMethod[];
+] as MockMethod[]

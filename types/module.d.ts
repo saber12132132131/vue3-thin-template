@@ -1,11 +1,3 @@
-/*
- * @Author: your name
- * @Date: 2021-11-01 13:37:49
- * @LastEditTime: 2021-11-02 16:25:18
- * @LastEditors: your name
- * @Description: In User Settings Edit
- * @FilePath: \vue3-thin-template\types\module.d.ts
- */
 declare module '*.vue' {
   import { DefineComponent } from 'vue'
   const Component: DefineComponent<{}, {}, any>
