@@ -15,11 +15,13 @@ import { defHttp } from '/@/utils/http/axios'
 enum Api {
   AccountList = '/system/getAccountList',
   IsAccountExist = '/system/accountExist',
-  DeptList = '/system/getDeptList',
+  DeptList = '/dept/getDeptList',
   setRoleStatus = '/system/setRoleStatus',
-  MenuList = '/system/getMenuList',
+  MenuList = '/menu/getMenuList',
   RolePageList = '/system/getRoleListByPage',
   GetAllRoleList = '/system/getAllRoleList',
+  EditRole = '/system/editRole',
+  AddRole = '/system/addRole',
 }
 
 export const getAccountList = (params: AccountParams) =>
@@ -37,8 +39,12 @@ export const getRoleListByPage = (params?: RolePageParams) =>
 export const getAllRoleList = (params?: RoleParams) =>
   defHttp.get<RoleListGetResultModel>({ url: Api.GetAllRoleList, params })
 
-export const setRoleStatus = (id: number, status: string) =>
+export const setRoleStatus = (id: number, status: Boolean) =>
   defHttp.post({ url: Api.setRoleStatus, params: { id, status } })
+
+export const editRole = (data) => defHttp.post({ url: Api.EditRole, data })
+
+export const addRole = (data) => defHttp.post({ url: Api.AddRole, data })
 
 export const isAccountExist = (account: string) =>
   defHttp.post({ url: Api.IsAccountExist, params: { account } }, { errorMessageMode: 'none' })

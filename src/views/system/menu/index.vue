@@ -36,6 +36,8 @@
   import MenuDrawer from './MenuDrawer.vue'
 
   import { columns, searchFormSchema } from './menu.data'
+  import { addMenu, delMenu, editMenu } from '/@/api/sys/menu'
+  import { Menu } from '/@/api/sys/model/menuModel'
 
   export default defineComponent({
     name: 'MenuManagement',
@@ -80,11 +82,36 @@
         })
       }
 
-      function handleDelete(record: Recordable) {
-        console.log(record)
+      async function handleDelete(record: Recordable) {
+        await delMenu(record.id)
+        reload()
       }
 
-      function handleSuccess() {
+      async function handleSuccess({ isUpdate, values }) {
+        console.log(isUpdate, values)
+        const menu: Menu = {
+          id: values.id,
+          type: values.type,
+          title: values.title,
+          pid: values.parentMenu,
+          name: values.menuName,
+          component: values.component,
+          sort: values.orderNo,
+          icon: values.icon,
+          path: values.path,
+          cache: values.keepalive,
+          permission: values.permission,
+          hideMenu: !values.show,
+          status: values.status,
+          isExt: values.isExt,
+        }
+        console.log(menu)
+        if (isUpdate) {
+          await editMenu(menu)
+        } else {
+          await addMenu(menu)
+        }
+
         reload()
       }
 

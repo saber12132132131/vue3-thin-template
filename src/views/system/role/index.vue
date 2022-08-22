@@ -30,7 +30,7 @@
   import { defineComponent } from 'vue'
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table'
-  import { getRoleListByPage } from '/@/api/demo/system'
+  import { addRole, editRole, getRoleListByPage } from '/@/api/demo/system'
 
   import { useDrawer } from '/@/components/Drawer'
   import RoleDrawer from './RoleDrawer.vue'
@@ -80,7 +80,12 @@
         console.log(record)
       }
 
-      function handleSuccess() {
+      async function handleSuccess({ isUpdate, values }) {
+        if (isUpdate) {
+          await editRole(values)
+        } else {
+          await addRole(values)
+        }
         reload()
       }
 

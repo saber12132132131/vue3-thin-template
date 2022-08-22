@@ -30,13 +30,13 @@ export const columns: BasicColumn[] = [
         record.pendingStatus = false
       }
       return h(Switch, {
-        checked: record.status === '1',
+        checked: record.status,
         checkedChildren: '已启用',
         unCheckedChildren: '已禁用',
         loading: record.pendingStatus,
         onChange(checked: boolean) {
           record.pendingStatus = true
-          const newStatus = checked ? '1' : '0'
+          const newStatus = checked
           const { createMessage } = useMessage()
           setRoleStatus(record.id, newStatus)
             .then(() => {
@@ -102,11 +102,11 @@ export const formSchema: FormSchema[] = [
     field: 'status',
     label: '状态',
     component: 'RadioButtonGroup',
-    defaultValue: '0',
+    defaultValue: true,
     componentProps: {
       options: [
-        { label: '启用', value: '0' },
-        { label: '停用', value: '1' },
+        { label: '启用', value: true },
+        { label: '停用', value: false },
       ],
     },
   },

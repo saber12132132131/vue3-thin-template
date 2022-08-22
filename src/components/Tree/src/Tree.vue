@@ -316,6 +316,7 @@
         () => state.checkedKeys,
         () => {
           const v = toRaw(state.checkedKeys)
+          console.log(v)
           emit('update:value', v)
           emit('change', v)
         },

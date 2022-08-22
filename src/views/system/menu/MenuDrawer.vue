@@ -24,7 +24,7 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true)
-
+      const id = ref(null)
       const [registerForm, { resetFields, setFieldsValue, updateSchema, validate }] = useForm({
         labelWidth: 100,
         schemas: formSchema,
@@ -36,7 +36,7 @@
         resetFields()
         setDrawerProps({ confirmLoading: false })
         isUpdate.value = !!data?.isUpdate
-
+        id.value = data.record.id
         if (unref(isUpdate)) {
           setFieldsValue({
             ...data.record,
@@ -58,7 +58,14 @@
           // TODO custom api
           console.log(values)
           closeDrawer()
-          emit('success')
+
+          emit('success', {
+            isUpdate: unref(isUpdate),
+            values: {
+              id: id.value,
+              ...values,
+            },
+          })
         } finally {
           setDrawerProps({ confirmLoading: false })
         }

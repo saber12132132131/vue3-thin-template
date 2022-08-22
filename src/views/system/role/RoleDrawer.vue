@@ -10,6 +10,7 @@
     <BasicForm @register="registerForm">
       <template #menu="{ model, field }">
         <BasicTree
+          :checkStrictly="true"
           v-model:value="model[field]"
           :treeData="treeData"
           :replaceFields="{ title: 'menuName', key: 'id' }"
@@ -36,6 +37,7 @@
     emits: ['success', 'register'],
     setup(_, { emit }) {
       const isUpdate = ref(true)
+      const id = ref(null)
       const treeData = ref<TreeItem[]>([])
 
       const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({
@@ -52,7 +54,7 @@
           treeData.value = (await getMenuList()) as any as TreeItem[]
         }
         isUpdate.value = !!data?.isUpdate
-
+        id.value = data.record.id
         if (unref(isUpdate)) {
           setFieldsValue({
             ...data.record,
@@ -66,10 +68,15 @@
         try {
           const values = await validate()
           setDrawerProps({ confirmLoading: true })
-          // TODO custom api
-          console.log(values)
           closeDrawer()
-          emit('success')
+          emit('success', {
+            isUpdate: unref(isUpdate),
+            values: {
+              id: id.value,
+              ...values,
+              menu: values.menu.checked,
+            },
+          })
         } finally {
           setDrawerProps({ confirmLoading: false })
         }
