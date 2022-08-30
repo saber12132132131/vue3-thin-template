@@ -19,11 +19,6 @@ export const columns: BasicColumn[] = [
     width: 120,
   },
   {
-    title: '创建时间',
-    dataIndex: 'createTime',
-    width: 180,
-  },
-  {
     title: '角色',
     dataIndex: 'role',
     width: 200,
@@ -31,6 +26,11 @@ export const columns: BasicColumn[] = [
   {
     title: '备注',
     dataIndex: 'remark',
+  },
+  {
+    title: '创建时间',
+    dataIndex: 'createTime',
+    width: 180,
   },
 ]
 

@@ -9,6 +9,7 @@ import {
   AccountListGetResultModel,
   RolePageListGetResultModel,
   RoleListGetResultModel,
+  AccountListItem,
 } from '../model/systemModel'
 import { defHttp } from '/@/utils/http/axios'
 
@@ -22,6 +23,9 @@ enum Api {
   GetAllRoleList = '/system/getAllRoleList',
   EditRole = '/system/editRole',
   AddRole = '/system/addRole',
+  DelRole = '/system/delRole',
+  EditAccount = '/system/editAccount',
+  AddAccount = '/system/addAccount',
 }
 
 export const getAccountList = (params: AccountParams) =>
@@ -46,5 +50,13 @@ export const editRole = (data) => defHttp.post({ url: Api.EditRole, data })
 
 export const addRole = (data) => defHttp.post({ url: Api.AddRole, data })
 
+export const delRole = (id: number) => defHttp.get({ url: Api.DelRole, params: { id } })
+
 export const isAccountExist = (account: string) =>
   defHttp.post({ url: Api.IsAccountExist, params: { account } }, { errorMessageMode: 'none' })
+
+export const editAccount = (data: AccountListItem) =>
+  defHttp.post<AccountListItem>({ url: Api.EditAccount, data })
+
+export const addAccount = (data: AccountListItem) =>
+  defHttp.post<AccountListItem>({ url: Api.AddAccount, data })

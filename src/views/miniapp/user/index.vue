@@ -1,8 +1,8 @@
 <template>
   <div>
-    <BasicTable @register="registerTable">
+    <BasicTable @register="registerTable" @fetch-success="onFetchSuccess">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增角色 </a-button>
+        <a-button type="primary" @click="handleCreate"> 新增菜单 </a-button>
       </template>
       <template #action="{ record }">
         <TableAction
@@ -23,37 +23,43 @@
         />
       </template>
     </BasicTable>
-    <RoleDrawer @register="registerDrawer" @success="handleSuccess" />
+    <MenuDrawer @register="registerDrawer" @success="handleSuccess" />
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent } from 'vue'
+  import { defineComponent, nextTick } from 'vue'
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table'
-  import { addRole, delRole, editRole, getRoleListByPage } from '/@/api/demo/system'
+  import { getMenuList } from '/@/api/demo/system'
 
   import { useDrawer } from '/@/components/Drawer'
-  import RoleDrawer from './RoleDrawer.vue'
+  import MenuDrawer from './MenuDrawer.vue'
 
-  import { columns, searchFormSchema } from './role.data'
+  import { columns, searchFormSchema } from './menu.data'
+  import { addMenu, delMenu, editMenu } from '/@/api/sys/menu'
+  import { Menu } from '/@/api/sys/model/menuModel'
 
   export default defineComponent({
-    name: 'RoleManagement',
-    components: { BasicTable, RoleDrawer, TableAction },
+    name: 'MenuManagement',
+    components: { BasicTable, MenuDrawer, TableAction },
     setup() {
       const [registerDrawer, { openDrawer }] = useDrawer()
-      const [registerTable, { reload }] = useTable({
-        title: '角色列表',
-        api: getRoleListByPage,
+      const [registerTable, { reload, expandAll }] = useTable({
+        title: '菜单列表',
+        api: getMenuList,
         columns,
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
         },
+        isTreeTable: true,
+        pagination: false,
+        striped: false,
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
         showIndexColumn: false,
+        canResize: false,
         actionColumn: {
           width: 80,
           title: '操作',
@@ -77,17 +83,41 @@
       }
 
       async function handleDelete(record: Recordable) {
-        await delRole(record.id)
+        await delMenu(record.id)
         reload()
       }
 
       async function handleSuccess({ isUpdate, values }) {
-        if (isUpdate) {
-          await editRole(values)
-        } else {
-          await addRole(values)
+        console.log(isUpdate, values)
+        const menu: Menu = {
+          id: values.id,
+          type: values.type,
+          title: values.title,
+          pid: values.parentMenu,
+          name: values.menuName,
+          component: values.component,
+          sort: values.orderNo,
+          icon: values.icon,
+          path: values.path,
+          cache: values.keepalive,
+          permission: values.permission,
+          hideMenu: !values.show,
+          status: values.status,
+          isExt: values.isExt,
         }
+        console.log(menu)
+        if (isUpdate) {
+          await editMenu(menu)
+        } else {
+          await addMenu(menu)
+        }
+
         reload()
+      }
+
+      function onFetchSuccess() {
+        // 演示默认展开所有表项
+        nextTick(expandAll)
       }
 
       return {
@@ -97,6 +127,7 @@
         handleEdit,
         handleDelete,
         handleSuccess,
+        onFetchSuccess,
       }
     },
   })

@@ -9,11 +9,6 @@
         <TableAction
           :actions="[
             {
-              icon: 'clarity:info-standard-line',
-              tooltip: '查看用户详情',
-              onClick: handleView.bind(null, record),
-            },
-            {
               icon: 'clarity:note-edit-line',
               tooltip: '编辑用户资料',
               onClick: handleEdit.bind(null, record),
@@ -87,7 +82,6 @@
       }
 
       function handleEdit(record: Recordable) {
-        console.log(record)
         openModal(true, {
           record,
           isUpdate: true,
@@ -102,6 +96,7 @@
         if (isUpdate) {
           // 演示不刷新表格直接更新内部数据。
           // 注意：updateTableDataRecord要求表格的rowKey属性为string并且存在于每一行的record的keys中
+
           const result = updateTableDataRecord(values.id, values)
           console.log(result)
         } else {
