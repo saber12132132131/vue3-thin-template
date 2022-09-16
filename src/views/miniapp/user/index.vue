@@ -1,19 +1,16 @@
 <template>
-  <div>
-    <BasicTable @register="registerTable" @fetch-success="onFetchSuccess">
-      <template #toolbar>
-        <a-button type="primary" @click="handleCreate"> 新增菜单 </a-button>
-      </template>
+  <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
+    <BasicTable @register="registerTable" :searchInfo="searchInfo">
+      <!-- <template #toolbar>
+        <a-button type="primary" @click="handleCreate">新增账号</a-button>
+      </template> -->
       <template #action="{ record }">
         <TableAction
           :actions="[
             {
-              icon: 'clarity:note-edit-line',
-              onClick: handleEdit.bind(null, record),
-            },
-            {
               icon: 'ant-design:delete-outlined',
               color: 'error',
+              tooltip: '删除此账号',
               popConfirm: {
                 title: '是否确认删除',
                 confirm: handleDelete.bind(null, record),
@@ -23,111 +20,102 @@
         />
       </template>
     </BasicTable>
-    <MenuDrawer @register="registerDrawer" @success="handleSuccess" />
-  </div>
+    <!-- <AccountModal @register="registerModal" @success="handleSuccess" /> -->
+  </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, nextTick } from 'vue'
+  import { defineComponent, reactive } from 'vue'
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table'
-  import { getMenuList } from '/@/api/demo/system'
+  import { getAppUserByPage } from '/@/api/miniapp/user'
+  import { PageWrapper } from '/@/components/Page'
 
-  import { useDrawer } from '/@/components/Drawer'
-  import MenuDrawer from './MenuDrawer.vue'
+  import { useModal } from '/@/components/Modal'
+  import AccountModal from './AccountModal.vue'
 
-  import { columns, searchFormSchema } from './menu.data'
-  import { addMenu, delMenu, editMenu } from '/@/api/sys/menu'
-  import { Menu } from '/@/api/sys/model/menuModel'
+  import { columns, searchFormSchema } from './account.data'
+  import { useGo } from '/@/hooks/web/usePage'
 
   export default defineComponent({
-    name: 'MenuManagement',
-    components: { BasicTable, MenuDrawer, TableAction },
+    name: 'MiniappUserManager',
+    components: { BasicTable, PageWrapper, AccountModal, TableAction },
     setup() {
-      const [registerDrawer, { openDrawer }] = useDrawer()
-      const [registerTable, { reload, expandAll }] = useTable({
-        title: '菜单列表',
-        api: getMenuList,
+      const go = useGo()
+      const [registerModal, { openModal }] = useModal()
+      const searchInfo = reactive<Recordable>({})
+      const [registerTable, { reload, updateTableDataRecord }] = useTable({
+        title: '小程序用户',
+        api: getAppUserByPage,
+        rowKey: 'id',
         columns,
         formConfig: {
           labelWidth: 120,
           schemas: searchFormSchema,
+          autoSubmitOnEnter: true,
         },
-        isTreeTable: true,
-        pagination: false,
-        striped: false,
         useSearchForm: true,
         showTableSetting: true,
         bordered: true,
-        showIndexColumn: false,
-        canResize: false,
+        handleSearchInfoFn(info) {
+          console.log('handleSearchInfoFn', info)
+          return info
+        },
         actionColumn: {
-          width: 80,
+          width: 120,
           title: '操作',
           dataIndex: 'action',
           slots: { customRender: 'action' },
-          fixed: undefined,
         },
       })
 
       function handleCreate() {
-        openDrawer(true, {
+        openModal(true, {
           isUpdate: false,
         })
       }
 
       function handleEdit(record: Recordable) {
-        openDrawer(true, {
+        openModal(true, {
           record,
           isUpdate: true,
         })
       }
 
-      async function handleDelete(record: Recordable) {
-        await delMenu(record.id)
-        reload()
+      function handleDelete(record: Recordable) {
+        console.log(record)
       }
 
-      async function handleSuccess({ isUpdate, values }) {
-        console.log(isUpdate, values)
-        const menu: Menu = {
-          id: values.id,
-          type: values.type,
-          title: values.title,
-          pid: values.parentMenu,
-          name: values.menuName,
-          component: values.component,
-          sort: values.orderNo,
-          icon: values.icon,
-          path: values.path,
-          cache: values.keepalive,
-          permission: values.permission,
-          hideMenu: !values.show,
-          status: values.status,
-          isExt: values.isExt,
-        }
-        console.log(menu)
+      function handleSuccess({ isUpdate, values }) {
         if (isUpdate) {
-          await editMenu(menu)
-        } else {
-          await addMenu(menu)
-        }
+          // 演示不刷新表格直接更新内部数据。
+          // 注意：updateTableDataRecord要求表格的rowKey属性为string并且存在于每一行的record的keys中
 
+          const result = updateTableDataRecord(values.id, values)
+          console.log(result)
+        } else {
+          reload()
+        }
+      }
+
+      function handleSelect(deptId = '') {
+        searchInfo.deptId = deptId
         reload()
       }
 
-      function onFetchSuccess() {
-        // 演示默认展开所有表项
-        nextTick(expandAll)
+      function handleView(record: Recordable) {
+        go('/system/account_detail/' + record.id)
       }
 
       return {
         registerTable,
-        registerDrawer,
+        registerModal,
         handleCreate,
         handleEdit,
         handleDelete,
         handleSuccess,
-        onFetchSuccess,
+        handleSelect,
+        handleView,
+        searchInfo,
       }
     },
   })
