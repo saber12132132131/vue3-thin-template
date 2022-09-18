@@ -27,7 +27,7 @@
   import { defineComponent, reactive } from 'vue'
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table'
-  import { getAppUserByPage, userDel } from '../../../api/miniapp/user/user'
+  import { getAppUserByPage } from '../../../api/miniapp/user/user'
   import { PageWrapper } from '/@/components/Page'
 
   import { useModal } from '/@/components/Modal'
@@ -36,10 +36,9 @@
   import { columns, searchFormSchema } from './account.data'
   import { useGo } from '/@/hooks/web/usePage'
   import { isUndefined } from 'lodash'
-  import { useMessage } from '/@/hooks/web/useMessage'
-  const msg = useMessage()
+
   export default defineComponent({
-    name: 'MiniappUserManager',
+    name: 'album',
     components: { BasicTable, PageWrapper, AccountModal, TableAction },
     setup() {
       const go = useGo()
@@ -101,16 +100,7 @@
       }
 
       function handleDelete(record: Recordable) {
-        userDel(record.id)
-          .then(() => {
-            msg.createMessage.success('删除用户成功')
-          })
-          .catch(() => {
-            msg.createMessage.success('删除用户失败')
-          })
-          .finally(() => {
-            reload()
-          })
+        console.log(record)
       }
 
       function handleSuccess({ isUpdate, values }) {

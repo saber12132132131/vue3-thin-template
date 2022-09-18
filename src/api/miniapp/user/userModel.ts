@@ -14,3 +14,11 @@ export interface AppUser {
   updateTime?: string
   vipEndTime?: string
 }
+
+export interface setUserStatusBo {
+  /**
+   * 用户ID
+   */
+  id: number
+  enable: boolean
+}

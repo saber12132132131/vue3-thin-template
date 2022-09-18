@@ -3,8 +3,6 @@ import { BasicColumn } from '/@/components/Table'
 import { FormSchema } from '/@/components/Table'
 import { h } from 'vue'
 import { Switch } from 'ant-design-vue'
-import { useMessage } from '/@/hooks/web/useMessage'
-import { setUserStatus } from '/@/api/miniapp/user/user'
 export const columns: BasicColumn[] = [
   {
     title: '用户头像',
@@ -39,27 +37,7 @@ export const columns: BasicColumn[] = [
         checkedChildren: '已启用',
         unCheckedChildren: '已禁用',
         loading: record.pendingStatus,
-        onChange(checked: boolean) {
-          console.log(record)
-          record.pendingStatus = true
-          const newStatus = checked
-          const { createMessage } = useMessage()
-          setUserStatus({
-            id: record.id,
-            enable: newStatus,
-          })
-            .then(() => {
-              record.enable = newStatus
-
-              createMessage.success('已成功修改用户状态', record)
-            })
-            .catch(() => {
-              createMessage.error('修改用户状态失败')
-            })
-            .finally(() => {
-              record.pendingStatus = false
-            })
-        },
+        onChange() {},
       })
     },
   },

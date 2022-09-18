@@ -3,4 +3,7 @@ export default {
   users: {
     title: 'miniapp user management',
   },
+  model: {
+    title: 'miniapp model management',
+  },
 }

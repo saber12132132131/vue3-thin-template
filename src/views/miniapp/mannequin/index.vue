@@ -1,12 +1,16 @@
 <template>
   <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
-      <!-- <template #toolbar>
-        <a-button type="primary" @click="handleCreate">新增账号</a-button>
-      </template> -->
+      <template #toolbar>
+        <a-button type="primary" @click="handleCreate">新增模特</a-button>
+      </template>
       <template #action="{ record }">
         <TableAction
           :actions="[
+            {
+              icon: 'clarity:note-edit-line',
+              onClick: handleEdit.bind(null, record),
+            },
             {
               icon: 'ant-design:delete-outlined',
               color: 'error',
@@ -20,34 +24,33 @@
         />
       </template>
     </BasicTable>
-    <!-- <AccountModal @register="registerModal" @success="handleSuccess" /> -->
+    <AccountModal @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
   import { defineComponent, reactive } from 'vue'
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table'
-  import { getAppUserByPage, userDel } from '../../../api/miniapp/user/user'
   import { PageWrapper } from '/@/components/Page'
 
   import { useModal } from '/@/components/Modal'
   import AccountModal from './AccountModal.vue'
 
   import { columns, searchFormSchema } from './account.data'
-  import { useGo } from '/@/hooks/web/usePage'
   import { isUndefined } from 'lodash'
+  import { modelAdd, modelDel, modelEdit, modelPage } from '/@/api/miniapp/mannequin'
   import { useMessage } from '/@/hooks/web/useMessage'
+  import { Moment } from 'moment'
   const msg = useMessage()
   export default defineComponent({
-    name: 'MiniappUserManager',
+    name: 'mannequin',
     components: { BasicTable, PageWrapper, AccountModal, TableAction },
     setup() {
-      const go = useGo()
       const [registerModal, { openModal }] = useModal()
       const searchInfo = reactive<Recordable>({})
       const [registerTable, { reload, updateTableDataRecord }] = useTable({
-        title: '小程序用户',
-        api: getAppUserByPage,
+        title: '模特',
+        api: modelPage,
         fetchSetting: {
           sizeField: 'size',
           listField: 'records',
@@ -59,11 +62,7 @@
             params.key = ''
             delete params.pageSize
           }
-
           return params
-        },
-        afterFetch: (...rest) => {
-          console.log(rest)
         },
         rowKey: 'id',
         columns,
@@ -101,7 +100,7 @@
       }
 
       function handleDelete(record: Recordable) {
-        userDel(record.id)
+        modelDel(record.id)
           .then(() => {
             msg.createMessage.success('删除用户成功')
           })
@@ -114,24 +113,26 @@
       }
 
       function handleSuccess({ isUpdate, values }) {
+        const birthday = values.birthday as Moment
+        delete values.birthday
+        const value = {
+          ...values,
+          birthday: birthday.format('YYYY-MM-DD'),
+        }
         if (isUpdate) {
           // 演示不刷新表格直接更新内部数据。
           // 注意：updateTableDataRecord要求表格的rowKey属性为string并且存在于每一行的record的keys中
 
-          const result = updateTableDataRecord(values.id, values)
-          console.log(result)
+          modelEdit(value).then(() => {
+            updateTableDataRecord(value.id, value)
+            msg.createMessage.success('修改成功')
+          })
         } else {
-          reload()
+          modelAdd(value).then(() => {
+            reload()
+            msg.createMessage.success('添加成功 ')
+          })
         }
-      }
-
-      function handleSelect(deptId = '') {
-        searchInfo.deptId = deptId
-        reload()
-      }
-
-      function handleView(record: Recordable) {
-        go('/system/account_detail/' + record.id)
       }
 
       return {
@@ -141,8 +142,6 @@
         handleEdit,
         handleDelete,
         handleSuccess,
-        handleSelect,
-        handleView,
         searchInfo,
       }
     },
