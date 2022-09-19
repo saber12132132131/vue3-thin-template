@@ -65,16 +65,15 @@ export const accountFormSchema: FormSchema[] = [
     component: 'Input',
   },
   {
-    field: 'des',
-    label: '专题简介',
-    component: 'Input',
-    required: true,
-  },
-
-  {
     label: '专题副标题',
     field: 'subtitle',
     component: 'Input',
+    required: true,
+  },
+  {
+    field: 'des',
+    label: '专题简介',
+    component: 'InputTextArea',
     required: true,
   },
 ]

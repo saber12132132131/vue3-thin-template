@@ -34,8 +34,13 @@
 
         if (unref(isUpdate)) {
           rowId.value = data.record.id
+          data.record.needVip ??= false
           setFieldsValue({
             ...data.record,
+          })
+        } else {
+          setFieldsValue({
+            needVip: false,
           })
         }
 

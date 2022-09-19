@@ -2,7 +2,7 @@
   <PageWrapper dense contentFullHeight fixedHeight contentClass="flex">
     <BasicTable @register="registerTable" :searchInfo="searchInfo">
       <template #toolbar>
-        <a-button type="primary" @click="handleCreate">新增模特</a-button>
+        <a-button type="primary" @click="handleCreate">新增话题</a-button>
       </template>
       <template #action="{ record }">
         <TableAction
