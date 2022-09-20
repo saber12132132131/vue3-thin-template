@@ -229,6 +229,7 @@
               return uploadApiByItem(item)
             }),
           )
+          console.log(data)
           isUploadingRef.value = false
           // 生产环境:抛出错误
           const errorList = data.filter((item: any) => !item.success)
@@ -252,6 +253,7 @@
         const fileList: string[] = []
 
         for (const item of fileListRef.value) {
+          console.log(fileListRef)
           const { status, responseData } = item
           if (status === UploadResultStatus.SUCCESS && responseData) {
             fileList.push(responseData.url)

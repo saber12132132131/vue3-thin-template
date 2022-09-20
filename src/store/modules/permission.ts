@@ -191,8 +191,9 @@ export const usePermissionStore = defineStore({
           }
 
           // Dynamically introduce components
+          console.log(routeList)
           routeList = transformObjToRoute(routeList)
-
+          console.log(routeList)
           //  Background routing to menu structure
           const backMenuList = transformRouteToMenu(routeList)
           this.setBackMenuList(backMenuList)

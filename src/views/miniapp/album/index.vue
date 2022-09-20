@@ -12,6 +12,12 @@
               onClick: handleEdit.bind(null, record),
             },
             {
+              icon: 'ant-design:instagram-outlined',
+              color: 'success',
+              tooltip: '查看详情',
+              onClick: handleView.bind(null, record),
+            },
+            {
               icon: 'ant-design:delete-outlined',
               color: 'error',
               tooltip: '删除此账号',
@@ -24,11 +30,11 @@
         />
       </template>
     </BasicTable>
-    <AccountModal @register="registerModal" @success="handleSuccess" />
+    <AccountModal :dir="dir" @register="registerModal" @success="handleSuccess" />
   </PageWrapper>
 </template>
 <script lang="ts">
-  import { defineComponent, reactive } from 'vue'
+  import { defineComponent, reactive, ref, nextTick } from 'vue'
 
   import { BasicTable, useTable, TableAction } from '/@/components/Table'
   import { PageWrapper } from '/@/components/Page'
@@ -40,13 +46,16 @@
   import { isUndefined } from 'lodash'
   import { albumAdd, albumDel, albumEdit, albumPage } from '/@/api/miniapp/album'
   import { useMessage } from '/@/hooks/web/useMessage'
+  import { useGo } from '/@/hooks/web/usePage'
   const msg = useMessage()
   export default defineComponent({
     name: 'album',
     components: { BasicTable, PageWrapper, AccountModal, TableAction },
     setup() {
+      const go = useGo()
       const [registerModal, { openModal }] = useModal()
       const searchInfo = reactive<Recordable>({})
+      const dir = ref('/album')
       const [registerTable, { reload }] = useTable({
         title: '模特',
         api: albumPage,
@@ -92,9 +101,12 @@
       }
 
       function handleEdit(record: Recordable) {
-        openModal(true, {
-          record,
-          isUpdate: true,
+        nextTick(() => {
+          dir.value = record.modelName
+          openModal(true, {
+            record,
+            isUpdate: true,
+          })
         })
       }
 
@@ -130,7 +142,9 @@
           })
         }
       }
-
+      function handleView(record: Recordable) {
+        go('/miniapp/detail/' + record.id)
+      }
       return {
         registerTable,
         registerModal,
@@ -139,6 +153,8 @@
         handleDelete,
         handleSuccess,
         searchInfo,
+        handleView,
+        dir,
       }
     },
   })

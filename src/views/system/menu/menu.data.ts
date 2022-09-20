@@ -187,10 +187,10 @@ export const formSchema: FormSchema[] = [
   },
 
   {
-    field: 'show',
-    label: '是否显示',
+    field: 'hideMenu',
+    label: '是否隐藏菜单',
     component: 'RadioButtonGroup',
-    defaultValue: true,
+    defaultValue: false,
     componentProps: {
       options: [
         { label: '是', value: true },

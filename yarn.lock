@@ -2308,6 +2308,11 @@
     micromatch "^4.0.4"
     windicss "^3.1.9"
 
+"@xmldom/xmldom@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.npmmirror.com/@xmldom/xmldom/-/xmldom-0.8.2.tgz#b695ff674e8216efa632a3d36ad51ae9843380c0"
+  integrity sha512-+R0juSseERyoPvnBQ/cZih6bpF7IpCXlWbHRoCRzYzqpz6gWHOgf8o4MOEf6KBVuOyqU+gCNLkCWVIJAro8XyQ==
+
 "@zxcvbn-ts/core@^1.0.0-beta.0":
   version "1.0.0-beta.0"
   resolved "https://repo.huaweicloud.com/repository/npm/@zxcvbn-ts/core/-/core-1.0.0-beta.0.tgz#a616beacb83dbfe9174408ebabee746f3468b0ec"
@@ -3719,6 +3724,13 @@ corser@^2.0.1:
   version "2.0.1"
   resolved "https://repo.huaweicloud.com/repository/npm/corser/-/corser-2.0.1.tgz#8eda252ecaab5840dcd975ceb90d9370c819ff87"
   integrity sha1-jtolLsqrWEDc2XXOuQ2TcMgZ/4c=
+
+cos-js-sdk-v5@^1.4.6:
+  version "1.4.6"
+  resolved "https://registry.npmmirror.com/cos-js-sdk-v5/-/cos-js-sdk-v5-1.4.6.tgz#807b9eb4d8228ec1b6624f5bf71eb1e833930102"
+  integrity sha512-FTUXjBqtADiNk3O5pwiaiDLQRiD2bt5ZQnP+34rfBszG6DqH6oa7FNpQeI7lnTiCvsfIyE/EcsuCBt7VVQpioQ==
+  dependencies:
+    "@xmldom/xmldom" "^0.8.2"
 
 cosmiconfig@^7.0.0, cosmiconfig@^7.0.1:
   version "7.0.1"

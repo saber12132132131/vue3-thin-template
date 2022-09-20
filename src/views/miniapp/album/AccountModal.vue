@@ -7,20 +7,23 @@
   import { defineComponent, ref, computed, unref } from 'vue'
   import { BasicModal, useModalInner } from '/@/components/Modal'
   import { BasicForm, useForm } from '/@/components/Form/index'
-  import { accountFormSchema } from './account.data'
+  import { getAccountFormSchema } from './account.data'
   import { getDeptList } from '/@/api/demo/system'
 
   export default defineComponent({
     name: 'AccountModal',
     components: { BasicModal, BasicForm },
+    props: {
+      dir: String,
+    },
     emits: ['success', 'register'],
-    setup(_, { emit }) {
+    setup(props, { emit }) {
       const isUpdate = ref(true)
       const rowId = ref('')
-
+      console.log(props)
       const [registerForm, { setFieldsValue, updateSchema, resetFields, validate }] = useForm({
         labelWidth: 100,
-        schemas: accountFormSchema,
+        schemas: getAccountFormSchema(),
         showActionButtonGroup: false,
         actionColOptions: {
           span: 23,

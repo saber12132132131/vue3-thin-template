@@ -101,7 +101,7 @@
           path: values.path,
           cache: values.keepalive,
           permission: values.permission,
-          hideMenu: !values.show,
+          hideMenu: values.hideMenu,
           status: values.status,
           isExt: values.isExt,
         }

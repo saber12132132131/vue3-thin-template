@@ -1,6 +1,8 @@
 import { modelList } from '/@/api/miniapp/mannequin'
 import { BasicColumn } from '/@/components/Table'
 import { FormSchema } from '/@/components/Table'
+import { Tag } from 'ant-design-vue'
+import { h } from 'vue'
 export const columns: BasicColumn[] = [
   {
     title: '图册名字',
@@ -28,10 +30,22 @@ export const columns: BasicColumn[] = [
     width: 180,
     customRender({ record }) {
       if (record.needVip) {
-        Status
-        return '是'
+        // Status
+        return h(
+          Tag,
+          {
+            color: 'success',
+          },
+          '是',
+        )
       } else {
-        return '否'
+        return h(
+          Tag,
+          {
+            color: 'error',
+          },
+          '否',
+        )
       }
     },
   },
@@ -61,41 +75,42 @@ export const searchFormSchema: FormSchema[] = [
     colProps: { span: 8 },
   },
 ]
-
-export const accountFormSchema: FormSchema[] = [
-  {
-    field: 'photoName',
-    label: '图册名字',
-    component: 'Input',
-    required: true,
-  },
-  {
-    field: 'downloadUrl',
-    label: '图册下载地址',
-    component: 'Input',
-    required: true,
-  },
-
-  {
-    label: '是否需要Vip',
-    field: 'needVip',
-    component: 'Switch',
-    required: true,
-  },
-  {
-    label: '模特',
-    field: 'modelId',
-    component: 'ApiSelect',
-    componentProps: {
-      api: modelList,
-      labelField: 'name',
-      valueField: 'id',
+export function getAccountFormSchema(): FormSchema[] {
+  return [
+    {
+      field: 'photoName',
+      label: '图册名字',
+      component: 'Input',
+      required: true,
     },
-    required: true,
-  },
-  {
-    label: '积分点数',
-    field: 'point',
-    component: 'InputNumber',
-  },
-]
+    {
+      field: 'downloadUrl',
+      label: '图册下载地址',
+      component: 'Input',
+      required: true,
+    },
+
+    {
+      label: '是否需要Vip',
+      field: 'needVip',
+      component: 'Switch',
+      required: true,
+    },
+    {
+      label: '模特',
+      field: 'modelId',
+      component: 'ApiSelect',
+      componentProps: {
+        api: modelList,
+        labelField: 'name',
+        valueField: 'id',
+      },
+      required: true,
+    },
+    {
+      label: '积分点数',
+      field: 'point',
+      component: 'InputNumber',
+    },
+  ]
+}

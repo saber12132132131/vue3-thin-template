@@ -38,6 +38,7 @@
         isUpdate.value = !!data?.isUpdate
         id.value = data.record.id
         if (unref(isUpdate)) {
+          console.log(data.record)
           setFieldsValue({
             ...data.record,
           })
