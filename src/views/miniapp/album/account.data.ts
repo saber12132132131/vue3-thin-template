@@ -1,6 +1,7 @@
 import { modelList } from '/@/api/miniapp/mannequin'
 import { BasicColumn } from '/@/components/Table'
 import { FormSchema } from '/@/components/Table'
+import { DescItem } from '/@/components/Description/index'
 import { Tag } from 'ant-design-vue'
 import { h } from 'vue'
 export const columns: BasicColumn[] = [
@@ -114,3 +115,26 @@ export function getAccountFormSchema(): FormSchema[] {
     },
   ]
 }
+export const albumDescSchema: DescItem[] = [
+  {
+    field: 'photoName',
+    label: '图册名字',
+  },
+  {
+    field: 'downloadUrl',
+    label: '图册下载地址',
+  },
+
+  {
+    label: '是否需要Vip',
+    field: 'needVip',
+  },
+  {
+    label: '模特',
+    field: 'modelId',
+  },
+  {
+    label: '积分点数',
+    field: 'point',
+  },
+]
