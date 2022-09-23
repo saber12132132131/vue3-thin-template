@@ -143,7 +143,7 @@
         }
       }
       function handleView(record: Recordable) {
-        go('/miniapp/album/detail/' + record.id)
+        go('/miniapp/albumDetail/' + record.id)
       }
       return {
         registerTable,

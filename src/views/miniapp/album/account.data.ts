@@ -119,22 +119,104 @@ export const albumDescSchema: DescItem[] = [
   {
     field: 'photoName',
     label: '图册名字',
+    labelMinWidth: 150,
+    contentMinWidth: 450,
   },
   {
     field: 'downloadUrl',
     label: '图册下载地址',
+    labelMinWidth: 300,
+    contentMinWidth: 300,
   },
-
   {
     label: '是否需要Vip',
     field: 'needVip',
-  },
-  {
-    label: '模特',
-    field: 'modelId',
+    labelMinWidth: 150,
+    contentMinWidth: 450,
+    render(val, data) {
+      console.log(val, data)
+      if (val) {
+        // Status
+        return h(
+          Tag,
+          {
+            color: 'success',
+          },
+          '是',
+        )
+      } else {
+        return h(
+          Tag,
+          {
+            color: 'error',
+          },
+          '否',
+        )
+      }
+    },
   },
   {
     label: '积分点数',
     field: 'point',
+    labelMinWidth: 150,
+    contentMinWidth: 450,
+  },
+  {
+    label: '是否是热门',
+    field: 'isHot',
+    labelMinWidth: 150,
+    contentMinWidth: 450,
+    render(val) {
+      if (val) {
+        // Status
+        return h(
+          Tag,
+          {
+            color: 'success',
+          },
+          '是',
+        )
+      } else {
+        return h(
+          Tag,
+          {
+            color: 'error',
+          },
+          '否',
+        )
+      }
+    },
+  },
+  {
+    label: '是否是精选',
+    field: 'isSelect',
+    labelMinWidth: 150,
+    contentMinWidth: 450,
+    render(val) {
+      if (val) {
+        // Status
+        return h(
+          Tag,
+          {
+            color: 'success',
+          },
+          '是',
+        )
+      } else {
+        return h(
+          Tag,
+          {
+            color: 'error',
+          },
+          '否',
+        )
+      }
+    },
+  },
+  {
+    label: '模特姓名',
+    field: 'model.name',
+    labelMinWidth: 150,
+    contentMinWidth: 450,
   },
 ]
