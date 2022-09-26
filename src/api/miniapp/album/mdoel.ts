@@ -59,3 +59,8 @@ export interface Photo {
   photo_HD_url?: string
   isMain?: boolean
 }
+
+export interface AddImagesVo {
+  albumId?: number
+  images: Photo[]
+}

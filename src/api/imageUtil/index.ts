@@ -6,8 +6,8 @@ const cos = new COS({
   SecretKey: '93g27xXpqb5IEtIQItEI5bqpXy82f04t',
 })
 
-export const imagePut = function (dir, handleProgress, handleUploaded) {
-  return function ({ file }) {
+export const imagePut = function (dir, onSuccess) {
+  return function ({ file, onProgress }) {
     cos
       .putObject({
         Bucket: 'free-1259347022' /* 填入您自己的存储桶，必须字段 */,
@@ -16,11 +16,16 @@ export const imagePut = function (dir, handleProgress, handleUploaded) {
         StorageClass: 'STANDARD',
         Body: file, // 上传文件对象
         onProgress(config) {
-          handleProgress(file, config)
+          config.percent = config.percent * 100
+          onProgress(config)
         },
       })
       .then((res) => {
-        handleUploaded(file, res)
+        const obj = {
+          photo_url: `https://${res.Location}`,
+          isMain: false,
+        }
+        onSuccess(obj)
       })
   }
 }

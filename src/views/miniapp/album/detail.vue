@@ -19,6 +19,7 @@
         <plus-outlined v-else />
         <div class="ant-upload-text">Upload</div>
       </Upload>
+      <a-button type="primary" @click="saveImg">保存图片</a-button>
     </CollapseContainer>
   </div>
 </template>
@@ -29,10 +30,11 @@
   import { Description, useDescription } from '/@/components/Description/index'
   import { CollapseContainer } from '/@/components/Container/index'
   import { albumDescSchema } from './account.data'
-  import { albumDetail } from '/@/api/miniapp/album'
+  import { albumAddImage, albumDetail } from '/@/api/miniapp/album'
   import { useRoute } from 'vue-router'
   import type { AlbumVo } from '/@/api/miniapp/album/mdoel'
   import { imagePut } from '/@/api/imageUtil'
+
   function getBase64(file: File) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
@@ -51,9 +53,10 @@
       const imageUploadFun = ref()
       const loading = ref<boolean>(false)
       const fileList = ref<any[]>([])
+      const uploadList = ref<any[]>([])
+      const id = ref(Number(useRoute().params.id))
       onMounted(async () => {
-        const id = useRoute().params.id
-        ablum.value = await albumDetail(Number(id))
+        ablum.value = await albumDetail(id.value)
         const photoList = ablum.value.photos?.map((photo) => {
           const obj = {
             uid: photo.id,
@@ -64,17 +67,10 @@
           return obj
         })
         fileList.value = photoList ?? []
-        imageUploadFun.value = imagePut(
-          ablum.value.model?.name,
-          (file, _config: any) => {
-            console.log(file)
-          },
-          (_file, _data) => {
-            // console.log(file, data)
-          },
-        )
+        imageUploadFun.value = imagePut(ablum.value.model?.name, (img) => {
+          uploadList.value = [...uploadList.value, img]
+        })
       })
-
       const [register] = useDescription({
         title: '图册基础内容',
         data: ablum,
@@ -98,8 +94,21 @@
         previewVisible.value = true
         previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1)
       }
-      function handleChange(_rest) {
-        // console.log(rest)
+      function handleChange({ event }) {
+        if (event?.percent == 100) {
+          fileList.value = fileList.value.map((item) => {
+            item.status = 'done'
+            return item
+          })
+        }
+      }
+      function saveImg() {
+        const params = {
+          albumId: id.value,
+          images: uploadList.value,
+        }
+        albumAddImage(params)
+        console.log(uploadList)
       }
       return {
         register,
@@ -109,6 +118,7 @@
         imageUploadFun,
         beforeUpload,
         handleChange,
+        saveImg,
       }
     },
   })
