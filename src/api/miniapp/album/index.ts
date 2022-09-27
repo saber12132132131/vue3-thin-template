@@ -8,6 +8,7 @@ enum Api {
   One = '/miniapp/album/one',
   Detail = '/miniapp/album/detail',
   AddImages = '/miniapp/album/addImages',
+  albumList = '/miniapp/album/list',
 }
 
 /**
@@ -20,3 +21,4 @@ export const albumEdit = (params?: Album) => defHttp.post({ url: Api.Edit, data:
 export const albumOne = (id?: number) => defHttp.get<Album>({ url: Api.One, params: { id } })
 export const albumDetail = (id?: number) => defHttp.get<Album>({ url: Api.Detail, params: { id } })
 export const albumAddImage = (data) => defHttp.post<Boolean>({ url: Api.AddImages, data })
+export const albumList = () => defHttp.get({ url: Api.albumList })

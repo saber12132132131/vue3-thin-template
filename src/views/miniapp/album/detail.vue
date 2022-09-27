@@ -55,6 +55,7 @@
       const fileList = ref<any[]>([])
       const uploadList = ref<any[]>([])
       const id = ref(Number(useRoute().params.id))
+      useRoute().meta.title = '1212'
       onMounted(async () => {
         ablum.value = await albumDetail(id.value)
         const photoList = ablum.value.photos?.map((photo) => {

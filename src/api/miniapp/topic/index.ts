@@ -4,7 +4,7 @@ enum Api {
   Page = '/miniapp/topic/page',
   Add = '/miniapp/topic/add',
   Del = '/miniapp/topic/del',
-  Edit = '/miniapp/topic/edit',
+  Edit = '/miniapp/topic/editAlbums',
 }
 
 /**

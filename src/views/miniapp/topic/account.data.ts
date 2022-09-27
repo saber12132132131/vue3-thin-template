@@ -1,3 +1,4 @@
+import { albumList } from '/@/api/miniapp/album'
 import { BasicColumn } from '/@/components/Table'
 import { FormSchema } from '/@/components/Table'
 export const columns: BasicColumn[] = [
@@ -69,6 +70,18 @@ export const accountFormSchema: FormSchema[] = [
     field: 'subtitle',
     component: 'Input',
     required: true,
+  },
+  {
+    label: '相关图册',
+    field: 'albums',
+    required: true,
+    component: 'ApiSelect',
+    componentProps: {
+      api: albumList,
+      mode: 'multiple',
+      labelField: 'photoName',
+      valueField: 'id',
+    },
   },
   {
     field: 'des',
