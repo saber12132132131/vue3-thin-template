@@ -13,6 +13,7 @@
         :maxCount="200"
         :before-upload="beforeUpload"
         :customRequest="imageUploadFun"
+        :remove="handleRemove"
         @change="handleChange"
       >
         <loading-outlined v-if="loading" />
@@ -21,19 +22,26 @@
       </Upload>
       <a-button type="primary" @click="saveImg">保存图片</a-button>
     </CollapseContainer>
+    <Modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+      <img alt="example" style="width: 100%" :src="previewImage" />
+      <div class="btn-con">
+        <a-button class="btn" type="primary" @click="setDeault">设为默认</a-button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue'
-  import { Alert, Upload } from 'ant-design-vue'
+  import { Alert, Upload, Modal } from 'ant-design-vue'
   import { PlusOutlined, LoadingOutlined } from '@ant-design/icons-vue'
   import { Description, useDescription } from '/@/components/Description/index'
   import { CollapseContainer } from '/@/components/Container/index'
   import { albumDescSchema } from './account.data'
-  import { albumAddImage, albumDetail } from '/@/api/miniapp/album'
+  import { albumAddImage, albumDetail, albumRemoveImage } from '/@/api/miniapp/album'
   import { useRoute } from 'vue-router'
   import type { AlbumVo } from '/@/api/miniapp/album/mdoel'
   import { imagePut } from '/@/api/imageUtil'
+  import { useMessage } from '/@/hooks/web/useMessage'
 
   function getBase64(file: File) {
     return new Promise((resolve, reject) => {
@@ -44,7 +52,15 @@
     })
   }
   export default defineComponent({
-    components: { Description, Alert, CollapseContainer, Upload, PlusOutlined, LoadingOutlined },
+    components: {
+      Description,
+      Alert,
+      CollapseContainer,
+      Upload,
+      PlusOutlined,
+      LoadingOutlined,
+      Modal,
+    },
     setup() {
       let ablum = ref<AlbumVo>({})
       const previewVisible = ref(false)
@@ -108,9 +124,22 @@
           albumId: id.value,
           images: uploadList.value,
         }
-        albumAddImage(params)
+        albumAddImage(params).then(() => {
+          useMessage().createMessage.success('添加成功')
+        })
         console.log(uploadList)
       }
+      const handleCancel = () => {
+        previewVisible.value = false
+      }
+      const handleRemove = (file) => {
+        console.log(file)
+        const id = file.uid
+        albumRemoveImage(id).then(() => {
+          useMessage().createMessage.success('删除成功')
+        })
+      }
+      const setDeault = () => {}
       return {
         register,
         loading,
@@ -120,6 +149,11 @@
         beforeUpload,
         handleChange,
         saveImg,
+        previewVisible,
+        previewImage,
+        handleCancel,
+        handleRemove,
+        setDeault,
       }
     },
   })
@@ -142,4 +176,25 @@
     margin-top: 8px;
     color: #666;
   } */
+  .ant-upload-select-picture-card i {
+    font-size: 32px;
+    color: #999;
+  }
+
+  .ant-upload-select-picture-card .ant-upload-text {
+    margin-top: 8px;
+    color: #666;
+  }
+  .btn-con {
+    width: 100%;
+    height: 80px;
+    background-color: #999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn {
+    margin: 15px auto;
+    width: fit-content;
+  }
 </style>

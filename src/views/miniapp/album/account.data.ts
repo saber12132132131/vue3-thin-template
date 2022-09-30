@@ -51,6 +51,56 @@ export const columns: BasicColumn[] = [
     },
   },
   {
+    title: '是否是精选',
+    dataIndex: 'isSelect',
+    width: 180,
+    customRender({ record }) {
+      if (record.isSelect) {
+        // Status
+        return h(
+          Tag,
+          {
+            color: 'success',
+          },
+          '是',
+        )
+      } else {
+        return h(
+          Tag,
+          {
+            color: 'error',
+          },
+          '否',
+        )
+      }
+    },
+  },
+  {
+    title: '是否是热门',
+    dataIndex: 'isHot',
+    width: 180,
+    customRender({ record }) {
+      if (record.isHot) {
+        // Status
+        return h(
+          Tag,
+          {
+            color: 'success',
+          },
+          '是',
+        )
+      } else {
+        return h(
+          Tag,
+          {
+            color: 'error',
+          },
+          '否',
+        )
+      }
+    },
+  },
+  {
     title: '积分点数',
     dataIndex: 'point',
     width: 180,
@@ -94,6 +144,18 @@ export function getAccountFormSchema(): FormSchema[] {
     {
       label: '是否需要Vip',
       field: 'needVip',
+      component: 'Switch',
+      required: true,
+    },
+    {
+      label: '是否是精选',
+      field: 'isSelect',
+      component: 'Switch',
+      required: true,
+    },
+    {
+      label: '是否是热门',
+      field: 'isHot',
       component: 'Switch',
       required: true,
     },

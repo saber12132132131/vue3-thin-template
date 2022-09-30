@@ -38,6 +38,8 @@
         if (unref(isUpdate)) {
           rowId.value = data.record.id
           data.record.needVip ??= false
+          data.record.isSelect ??= false
+          data.record.isHot ??= false
           setFieldsValue({
             ...data.record,
           })
