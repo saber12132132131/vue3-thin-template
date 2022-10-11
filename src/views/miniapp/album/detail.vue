@@ -22,10 +22,12 @@
       </Upload>
       <a-button type="primary" @click="saveImg">保存图片</a-button>
     </CollapseContainer>
-    <Modal :visible="previewVisible" :footer="null" @cancel="handleCancel">
+    <Modal :visible="previewVisible" :footer="null" @cancel="handleCancel" :destroyOnClose="true">
       <img alt="example" style="width: 100%" :src="previewImage" />
       <div class="btn-con">
-        <a-button class="btn" type="primary" @click="setDeault">设为默认</a-button>
+        <a-button class="btn" type="primary" :disabled="previewIsMain" @click="setDeault"
+          >设为默认</a-button
+        >
       </div>
     </Modal>
   </div>
@@ -37,7 +39,7 @@
   import { Description, useDescription } from '/@/components/Description/index'
   import { CollapseContainer } from '/@/components/Container/index'
   import { albumDescSchema } from './account.data'
-  import { albumAddImage, albumDetail, albumRemoveImage } from '/@/api/miniapp/album'
+  import { albumAddImage, albumDetail, albumRemoveImage, albumSetMain } from '/@/api/miniapp/album'
   import { useRoute } from 'vue-router'
   import type { AlbumVo } from '/@/api/miniapp/album/mdoel'
   import { imagePut } from '/@/api/imageUtil'
@@ -64,7 +66,9 @@
     setup() {
       let ablum = ref<AlbumVo>({})
       const previewVisible = ref(false)
+      const previewIsMain = ref(false)
       const previewImage = ref('')
+      const previewPhotoId = ref('')
       const previewTitle = ref('')
       const imageUploadFun = ref()
       const loading = ref<boolean>(false)
@@ -72,7 +76,7 @@
       const uploadList = ref<any[]>([])
       const id = ref(Number(useRoute().params.id))
       useRoute().meta.title = '1212'
-      onMounted(async () => {
+      async function update() {
         ablum.value = await albumDetail(id.value)
         const photoList = ablum.value.photos?.map((photo) => {
           const obj = {
@@ -80,6 +84,7 @@
             name: photo.id,
             status: 'done',
             url: photo.photo_url,
+            isMain: photo.isMain,
           }
           return obj
         })
@@ -87,6 +92,9 @@
         imageUploadFun.value = imagePut(ablum.value.model?.name, (img) => {
           uploadList.value = [...uploadList.value, img]
         })
+      }
+      onMounted(async () => {
+        update()
       })
       const [register] = useDescription({
         title: '图册基础内容',
@@ -109,6 +117,8 @@
         }
         previewImage.value = file.url || file.preview
         previewVisible.value = true
+        previewIsMain.value = file.isMain
+        previewPhotoId.value = file.uid
         previewTitle.value = file.name || file.url.substring(file.url.lastIndexOf('/') + 1)
       }
       function handleChange({ event }) {
@@ -131,6 +141,10 @@
       }
       const handleCancel = () => {
         previewVisible.value = false
+        previewIsMain.value = false
+        previewPhotoId.value = ''
+        previewTitle.value = ''
+        previewImage.value = ''
       }
       const handleRemove = (file) => {
         console.log(file)
@@ -139,7 +153,12 @@
           useMessage().createMessage.success('删除成功')
         })
       }
-      const setDeault = () => {}
+      const setDeault = () => {
+        albumSetMain(id.value, previewPhotoId.value).then(() => {
+          previewIsMain.value = true
+          update()
+        })
+      }
       return {
         register,
         loading,
@@ -150,6 +169,7 @@
         handleChange,
         saveImg,
         previewVisible,
+        previewIsMain,
         previewImage,
         handleCancel,
         handleRemove,
